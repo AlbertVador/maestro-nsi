@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Chopin Script'; /*a name to be used later*/
+    src: url("ChopinScript.ttf");
+}
+
+body {
+    background-color: rgb(28, 28, 27);
+    color: rgb(255, 255, 245);
+}
+
+#conteneur {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+input {
+    text-align: center;
+    margin-top: 4rem;
+    padding: 1rem;
+    width: 15rem;
+    height: 1rem;
+    background-color: rgb(37, 37, 36);
+    border: rgb(204, 172, 35) 1px solid;
+    border-radius: 5px;
+    outline: none;
+    color: rgb(255, 255, 245);
+    font-size: 1em;
+}
+
+input::placeholder {
+    color: rgb(138, 138, 135);
+}
+
+#bouttonJoindre, #bouttonPerms {
+    margin-top: 2rem;
+    border: solid 1px rgb(204, 172, 35);
+    border-radius: 5px;
+    padding: 1rem;
+}
