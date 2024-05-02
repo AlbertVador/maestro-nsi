@@ -4,7 +4,7 @@ const bouttonJoindre = document.getElementById("bouttonJoindre");
 const bouttonPerms = document.getElementById("bouttonPerms");
 const statusToLane = ["rien", 2, 1, 3, 0];
 bouttonJoindre.onclick = () => {
-    const webSocket = new WebSocket(`ws://${window.location.hostname}:8008?code=${document.getElementById("entree").value}`);
+    const webSocket = new WebSocket(`wss://${window.location.hostname}:8008?code=${document.getElementById("entree").value}`);
     webSocket.onclose = () => {
         entree.style.borderColor = "red";
     }

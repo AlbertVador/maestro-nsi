@@ -53,6 +53,11 @@ const rateAction = (lane) => {
     }
 }
 
+const conteneurGameOver = document.getElementById("gameOver");
+const gameOver = () => {
+    canvas.style.display = "none";
+}
+
 let arrierePlan;
 const renderStatic = () => {
     arrierePlan.render();
@@ -102,6 +107,7 @@ const renderMusiciens = (dt, temps) => {
     });
 }
 
+let chansonFinit = false;
 let tempsFleches;
 let timestampCount = 0;
 const arrowSpeed = 200/1000; // px/ms
@@ -122,7 +128,12 @@ const gameLoop = (currentTime) => {
     renderStatic();
     renderMusiciens(dt, audioContext.currentTime);
     renderArrows(dt);
-    requestAnimationFrame(gameLoop);
+    if (chansonFinit) {
+        gameOver();
+    }
+    else {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 let webSocket;
@@ -134,7 +145,7 @@ const divsEtats = [document.getElementById("etat1"), document.getElementById("et
 const bouttonJouer = document.getElementById("jouer");
 bouttonCommencer.onclick = () => {
     conteneur.removeChild(bouttonCommencer);
-    webSocket = new WebSocket(`ws://${window.location.hostname}:8080/`);
+    webSocket = new WebSocket(`wss://${window.location.hostname}:8080/`);
     webSocket.onmessage = (reponse) => {
         codeConnect.innerHTML = reponse.data;
         webSocket.onmessage = (infoTelephone) => {
@@ -158,7 +169,8 @@ bouttonJouer.onclick = () => {
     bouttonJouer.style.display = "none";
     conteneurChoixChanson.style.display = "block";
     webSocket.onmessage = (message) => {
-        rateAction(message);
+        console.log(message.data)
+        rateAction(message.data);
     }
 }
 
@@ -172,6 +184,9 @@ const joueAudio = async (nomAudio) => {
   
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
+    source.onended = () => {
+        chansonFinit = true;
+    }
     source.start();
 };
 
