@@ -3,7 +3,7 @@ const bouttonJoindre = document.getElementById("bouttonJoindre");
 bouttonJoindre.style.display = "none"
 const bouttonPerms = document.getElementById("bouttonPerms");
 bouttonJoindre.onclick = () => {
-    const webSocket = new WebSocket(`wss://${window.location.hostname}:8008?code=${document.getElementById("entree").value}`);
+    const webSocket = new WebSocket(`ws://${window.location.hostname}:8008?code=${document.getElementById("entree").value}`);
     webSocket.onclose = () => {
         entree.style.borderColor = "red";
     }
