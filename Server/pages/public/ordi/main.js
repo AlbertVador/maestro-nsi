@@ -27,7 +27,10 @@ document.onkeydown = (e) => {
     }
 }
 
-let totalErreurs = 0;
+let performanceJoueur = {
+    "parfait" : 0,
+    "bien": 0
+}
 const rateAction = (lane) => {
     if (arrows[lane].length === 0) {
         console.log("Aucune flèche");
@@ -35,27 +38,59 @@ const rateAction = (lane) => {
     }
     const altitude = arrows[lane][0].y;
     const difference = Math.abs(canvasHeight/2 - altitude - 25);
-    totalErreurs += difference;
     arrows[lane].splice(0, 1);
     arrows[4].push(new Arrow(lane, altitude, true));
-    console.log(difference);
     if (difference <= 10) {
         console.log("Parfait!");
-        return 100;
+        performanceJoueur["parfait"]++;
     }
     else if (difference <= 30) {
         console.log("Bien.")
-        return 75;
+        performanceJoueur["bien"]++;
     }
     else {
         console.log("Mauvais :(");
-        return 0;
     }
 }
 
+let arrowCount = 0;
+const titre = document.getElementById("titre");
 const conteneurGameOver = document.getElementById("gameOver");
+const chiffresScore = document.getElementsByClassName("chiffreScore");
+const bouttonRejouer = document.getElementById("rejouer");
 const gameOver = () => {
     canvas.style.display = "none";
+    titre.style.display = "block";
+    conteneurGameOver.style.display = "block";
+    bouttonRejouer.style.display = "block";
+    const score = Math.floor(100000* (performanceJoueur["parfait"] + 0.75 * performanceJoueur["bien"]) / arrowCount); // 100000 = maximum possibles de points
+    console.log(score);
+    setTimeout(() => {
+        for (i = 5; i >= 0; i--) {
+            chiffresScore[i].style.translate = `0rem ${-Math.floor(score/(10**(5-i))%10)*6 - 0.5}rem`;
+        }
+    }, 1500);
+}
+
+bouttonRejouer.onclick = () => {
+    bouttonRejouer.style.display = "none";
+    conteneurGameOver.style.display = "none";
+    conteneurChoixChanson.style.display = "block";
+    chansonFinit = false;
+    arrowCount = 0;
+    arrows.forEach(lane => lane.length = 0);
+    performanceJoueur = {
+        "parfait" : 0,
+        "bien": 0
+    }
+    for (i = 0; i < 6; i++) {
+        chiffresScore[i].style.translate = "0rem -0.5rem";
+    }
+    timestampCount = 0;
+    source.stop();
+    audioContext.close();
+    audioContext = new AudioContext();
+    audioContext.suspend();
 }
 
 let arrierePlan;
@@ -120,6 +155,7 @@ const gameLoop = (currentTime) => {
         if (audioContext.currentTime*1000 + arrowDelay >= tempsFleches[timestampCount]["temps"]) {
             for (i = 0; i < Math.min(nombreTelephones, tempsFleches[timestampCount]["directions"].length); i++) {
                 arrows[tempsFleches[timestampCount]["directions"][i]].push(new Arrow(tempsFleches[timestampCount]["directions"][i], -50));
+                arrowCount++;
             }
             timestampCount++;
         }
@@ -143,6 +179,7 @@ const codeConnect = document.getElementById("codeConnect");
 const conteneur = document.getElementById("conteneur");
 const divsEtats = [document.getElementById("etat1"), document.getElementById("etat2")];
 const bouttonJouer = document.getElementById("jouer");
+const conteneurConnect = document.getElementById("conteneurConnect");
 bouttonCommencer.onclick = () => {
     conteneur.removeChild(bouttonCommencer);
     webSocket = new WebSocket(`wss://${window.location.hostname}:8080/`);
@@ -165,7 +202,7 @@ bouttonCommencer.onclick = () => {
 
 const conteneurChoixChanson = document.getElementById("conteneurChoixChanson");
 bouttonJouer.onclick = () => {
-    document.getElementById("conteneurConnect").style.display = "none";
+    conteneurConnect.style.display = "none";
     bouttonJouer.style.display = "none";
     conteneurChoixChanson.style.display = "block";
     webSocket.onmessage = (message) => {
@@ -174,7 +211,7 @@ bouttonJouer.onclick = () => {
     }
 }
 
-const audioContext = new AudioContext();
+let audioContext = new AudioContext();
 let source;
 const joueAudio = async (nomAudio) => {
     source = audioContext.createBufferSource();
@@ -188,6 +225,7 @@ const joueAudio = async (nomAudio) => {
         chansonFinit = true;
     }
     source.start();
+    audioContext.resume();
 };
 
 const commenceJeu = async (fichierChanson) => {
@@ -214,7 +252,6 @@ const commenceJeu = async (fichierChanson) => {
     requestAnimationFrame(gameLoop);
 }
 
-const titre = document.getElementById("titre");
 const listeChansons = document.getElementById("listeChansons");
 const preparerListeChansons = async () => {
     const reponse = await fetch("/chansonsPossibles");

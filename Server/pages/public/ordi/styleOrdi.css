@@ -124,3 +124,49 @@ canvas {
     image-rendering: pixelated;
     margin-top: 3rem;
 }
+
+#gameOver {
+    display: none;
+    font-size: 5em;
+    border: solid 1px rgb(204, 172, 35);
+    border-radius: 0.5rem;
+}
+
+#texteScore {
+    font-size: 0.4em;
+    border-bottom: solid 1px rgb(204, 172, 35);
+    padding: 1rem;
+}
+
+#conteneurScore {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    height: 5rem;
+}
+
+.chiffreScore {
+    display: block;
+    width: 5rem;
+    line-height: 6rem;
+    translate: 0rem -0.5rem;
+    transition: translate;
+    transition-duration: 4s;
+}
+
+#rejouer {
+    display: none;
+    border: solid 1px rgb(204, 172, 35);
+    border-radius: 5px;
+    padding: 1rem;
+    font-size: 1.3em;
+    width: 28rem;
+    margin-top: 1rem;
+    transition: background-color;
+    transition-duration: 0.2s;
+}
+
+#rejouer:hover {
+    cursor: pointer;
+    background-color: rgb(44, 44, 41);
+}
