@@ -4,16 +4,23 @@ const cors = require("cors");
 const url = require('url');
 const app = express();
 const ws = require("ws");
-const fs = require('fs');
-const clientServer = new ws.WebSocketServer({ port: 8080 });
-const phoneServer = new ws.WebSocketServer({ port: 8008 });
-const port = 3000;
+const fs = require("fs");
+// const https = require("https");
+const port = 443;
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "pages/public")));
 
 const phoneSockets = {};
 const clientSockets = {};
+
+// const options = {
+//     key: fs.readFileSync('/etc/letsencrypt/live/maestronsi.online/privkey.pem'),
+//     cert: fs.readFileSync('/etc/letsencrypt/live/maestronsi.online/fullchain.pem')
+// }
+// const server = https.createServer(options, app);
+const clientServer = new ws.WebSocketServer({ port: 8008 });
+const phoneServer = new ws.WebSocketServer({ port: 8080 });
 
 const createUniqueID = () => {
     return String.fromCharCode(
@@ -33,18 +40,6 @@ clientServer.on("connection", (ws) => {
     clientSockets[sID] = [ws, 0];
     console.log(Object.keys(clientSockets).length);
     console.log("connected");
-    ws.on("message", (data) => {
-
-        // -- -- -- -- --
-        // tonight
-        // ima gonna
-        // make the startup of the game
-        // click a button
-        // make a room code
-        // give the room code
-        // phones join the room code (1 or 2)
-
-    })
     ws.on("close", () => {
         delete clientSockets[sID];
         for (const [key, value] of Object.entries(phoneSockets)) {
@@ -54,6 +49,7 @@ clientServer.on("connection", (ws) => {
         }
         console.log("closed");
     })
+    console.log(sID);
     ws.send(sID);
 })
 
@@ -126,3 +122,8 @@ app.get("/audio/:nom", (req, res) => {
 app.listen(port, () => {
     console.log(`Serveur écoute sur le port ${port}.`);
 });
+
+
+// server.listen(port, () => {
+//     console.log(`Serveur écoute sur le port ${port}.`);
+// })

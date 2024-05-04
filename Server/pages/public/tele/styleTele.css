@@ -35,9 +35,17 @@ input::placeholder {
     color: rgb(138, 138, 135);
 }
 
-#bouttonJoindre, #bouttonPerms {
+#bouttonJoindre, #bouttonPerms, #bouttonMain {
     margin-top: 2rem;
     border: solid 1px rgb(204, 172, 35);
     border-radius: 5px;
     padding: 1rem;
+}
+
+#bouttonMain {
+  display: none;
+}
+
+#direc {
+  display: none;
 }
