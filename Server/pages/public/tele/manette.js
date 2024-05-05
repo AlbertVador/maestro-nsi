@@ -1,11 +1,11 @@
 const entree = document.getElementById("entree");
 const bouttonJoindre = document.getElementById("bouttonJoindre");
 const bouttonMain = document.getElementById("bouttonMain");
-// bouttonJoindre.style.display = "none";
+bouttonJoindre.style.display = "none";
 const bouttonPerms = document.getElementById("bouttonPerms");
 const statusToLane = ["rien", 2, 1, 3, 0];
 bouttonJoindre.onclick = () => {
-    const webSocket = new WebSocket(`ws://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`);
+    const webSocket = new WebSocket(`wss://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`);
     webSocket.onclose = () => {
         entree.style.borderColor = "red";
     }

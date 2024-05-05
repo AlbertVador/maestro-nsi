@@ -100,10 +100,10 @@ const renderStatic = () => {
     const firstLaneX = canvasWidth/2 - 2 * laneWidth;
     ctx.strokeStyle = "black";
     ctx.beginPath();
-    for (let i = 0; i < 5; i++) {
-        ctx.moveTo(firstLaneX + i*laneWidth, 0);
-        ctx.lineTo(firstLaneX + i*laneWidth, canvasHeight);
-    }
+    // for (let i = 0; i < 5; i++) {
+    //     ctx.moveTo(firstLaneX + i*laneWidth, 0);
+    //     ctx.lineTo(firstLaneX + i*laneWidth, canvasHeight);
+    // }
     ctx.moveTo(firstLaneX, canvasHeight/2);
     ctx.lineTo(firstLaneX + 4*laneWidth, canvasHeight/2);
     ctx.stroke();
@@ -196,7 +196,7 @@ const conteneurConnect = document.getElementById("conteneurConnect");
 bouttonCommencer.onclick = () => {
     conteneur.removeChild(document.getElementById("regles"));
     conteneur.removeChild(bouttonCommencer);
-    webSocket = new WebSocket(`ws://${window.location.hostname}:8008`);
+    webSocket = new WebSocket(`wss://${window.location.hostname}:8008`);
     webSocket.onmessage = (reponse) => {
         codeConnect.innerHTML = reponse.data;
         webSocket.onmessage = (infoTelephone) => {
@@ -233,7 +233,7 @@ const joueAudio = async (nomAudio) => {
     const audioBuffer = await fetch(`/audio/${nomAudio}`)
       .then(res => res.arrayBuffer())
       .then(ArrayBuffer => audioContext.decodeAudioData(ArrayBuffer));
-  
+
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
     source.onended = () => {

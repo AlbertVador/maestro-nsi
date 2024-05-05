@@ -1,26 +1,26 @@
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
-const url = require('url');
+import * as path from "path";
+import express from "express";
+import cors from "cors";
+import * as url from "url";
 const app = express();
-const ws = require("ws");
-const fs = require("fs");
-// const https = require("https");
-const port = 443;
+
+import bodyParser from "body-parser" // npm install body-parser
+import device from 'express-device'; // npm install express-device
+
+app.use(bodyParser());
+app.use(device.capture());
+
+import * as ws from "ws";
+import * as fs from "fs";
+const clientServer = new ws.WebSocketServer({ port: 8008 });
+const phoneServer = new ws.WebSocketServer({ port: 8080 });
+const port = 3000;
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, "pages/public")));
+app.use(express.static(path.join("./pages/public")));
 
 const phoneSockets = {};
 const clientSockets = {};
-
-// const options = {
-//     key: fs.readFileSync('/etc/letsencrypt/live/maestronsi.online/privkey.pem'),
-//     cert: fs.readFileSync('/etc/letsencrypt/live/maestronsi.online/fullchain.pem')
-// }
-// const server = https.createServer(options, app);
-const clientServer = new ws.WebSocketServer({ port: 8008 });
-const phoneServer = new ws.WebSocketServer({ port: 8080 });
 
 const createUniqueID = () => {
     return String.fromCharCode(
@@ -37,9 +37,11 @@ clientServer.on("connection", (ws) => {
     while (Object.keys(clientSockets).includes(sID)) {
         sID = createUniqueID();
     }
+    console.log("code : ", sID)
     clientSockets[sID] = [ws, 0];
     console.log(Object.keys(clientSockets).length);
     console.log("connected");
+    ws.on("message", (data) => {})
     ws.on("close", () => {
         delete clientSockets[sID];
         for (const [key, value] of Object.entries(phoneSockets)) {
@@ -49,7 +51,6 @@ clientServer.on("connection", (ws) => {
         }
         console.log("closed");
     })
-    console.log(sID);
     ws.send(sID);
 })
 
@@ -75,6 +76,7 @@ phoneServer.on("connection", (ws, req) => {
             delete phoneSockets[sID];
             if (Object.keys(clientSockets).includes(code)) {
                 clientSockets[code][0].send("déconnecté");
+                clientSockets[code][1]--;
             }
             console.log("closed");
         })
@@ -87,7 +89,12 @@ phoneServer.on("connection", (ws, req) => {
 
 // Chemin pour envoyer la page principale du jeu
 app.get("/", (req, res) => {
-    res.sendFile("ordinateur.html", { root: "pages" });
+    if (req.device.type == 'phone') {
+      res.sendFile("telephone.html", { root: "pages" })
+    }
+    else {
+      res.sendFile("ordinateur.html", { root: "pages" });
+    }
 });
 
 // Chemin pour envoyer la page telephone
@@ -122,8 +129,3 @@ app.get("/audio/:nom", (req, res) => {
 app.listen(port, () => {
     console.log(`Serveur écoute sur le port ${port}.`);
 });
-
-
-// server.listen(port, () => {
-//     console.log(`Serveur écoute sur le port ${port}.`);
-// })
