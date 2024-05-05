@@ -40,16 +40,22 @@ const rateAction = (lane) => {
     const difference = Math.abs(canvasHeight/2 - altitude - 25);
     arrows[lane].splice(0, 1);
     arrows[4].push(new Arrow(lane, altitude, true));
-    if (difference <= 10) {
+    if (difference <= 20) {
         console.log("Parfait!");
         performanceJoueur["parfait"]++;
+        lineColour = "green"
+        renderStatic()
     }
-    else if (difference <= 30) {
+    else if (difference <= 60) {
         console.log("Bien.")
         performanceJoueur["bien"]++;
+        lineColour = "orange"
+        renderStatic()
     }
     else {
         console.log("Mauvais :(");
+        lineColour = "red"
+        renderStatic()
     }
 }
 
@@ -94,11 +100,12 @@ bouttonRejouer.onclick = () => {
 }
 
 let arrierePlan;
+let lineColour = "black"
 const renderStatic = () => {
     arrierePlan.render();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     const firstLaneX = canvasWidth/2 - 2 * laneWidth;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = lineColour;
     ctx.beginPath();
     // for (let i = 0; i < 5; i++) {
     //     ctx.moveTo(firstLaneX + i*laneWidth, 0);
@@ -113,7 +120,7 @@ const renderStatic = () => {
 const arrows = [[], [], [], [], []]; // Une liste de 5 listes: les 4 premières pour les flèches actives, et la dernière pour les flèches mortes (en gris)
 const renderArrows = (dt) => {
     for (i = 0; i < 4; i++) {
-        if (arrows[i].length > 0 && canvasHeight/2 - arrows[i][0].y - 25 < -30) {
+        if (arrows[i].length > 0 && canvasHeight/2 - arrows[i][0].y - 25 < -60) {
             const altitude = arrows[i][0].y;
             arrows[i].splice(0, 1);
             arrows[4].push(new Arrow(i, altitude, true));
@@ -162,13 +169,10 @@ const gameLoop = (currentTime) => {
             if (tempsFleches[timestampCount]["directions"].length == 0) {
                 let dir = [1,2,3,4];
                 dir.splice(lastDirection-1,1)
-                console.log("Possible new dirs : ", dir)
                 dir = dir[Math.floor(Math.random()*3)]
-                console.log("Chosen dir : ", dir)
                 arrows[statusToLane[dir]].push(new Arrow(statusToLane[dir], -50));
                 arrowCount++;
                 lastDirection = dir;
-                console.log("Random arrow")
             }
             timestampCount++;
         }
