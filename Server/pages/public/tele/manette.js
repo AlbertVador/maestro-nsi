@@ -1,17 +1,21 @@
-const entree = document.getElementById("entree");
+const entree = document.getElementById("entree"); // endroit où on met le code
+// on enlève les trucs qui nous énervent
+entree.setAttribute('autocomplete', 'off')
+entree.setAttribute('autocorrect', 'off')
+entree.setAttribute('autocapitalize', 'off')
+entree.setAttribute('spellcheck', false)
 const bouttonJoindre = document.getElementById("bouttonJoindre");
 const bouttonMain = document.getElementById("bouttonMain");
-bouttonJoindre.style.display = "none";
 const bouttonPerms = document.getElementById("bouttonPerms");
-const statusToLane = ["rien", 2, 1, 3, 0];
+const statusToLane = ["rien", 2, 1, 3, 0]; // transférer la direction en colonne
 bouttonJoindre.onclick = () => {
-    const webSocket = new WebSocket(`wss://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`);
-    webSocket.onclose = () => {
+    const webSocket = new WebSocket(`wss://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`); // on ouvre une connection webSocket en donnant le code
+    webSocket.onclose = () => { // si le code n'est pas bon
         entree.style.borderColor = "red";
     }
-    webSocket.onmessage = () => {
+    webSocket.onmessage = () => { // si le code est bon
       document.body.removeChild(document.getElementById("conteneur"));
-      window.sendStatus = function() {webSocket.send(statusToLane[window.status]);}
+      window.sendStatus = function() {webSocket.send(statusToLane[window.status]);} // définir la fonction sendStatus pour envoyer le mouvement du téléphone
       bouttonMain.style.display = "block";
     }
 };
@@ -27,15 +31,15 @@ let relapse = 0;
 
 const getStatus = () => {
   let changement = 1
-  if (main == "Droite") {changement = -1}
+  if (main == "Droite") {changement = -1} // haut / bas, gauche / droite change dépendant de la main
   const l = [accelX*changement, 0, accelZ*changement*-1];
-  lAbs = l.map(Math.abs);
-  const max = Math.max.apply(Math,lAbs)
+  lAbs = l.map(Math.abs); // prendre la valeur absolue
+  const max = Math.max.apply(Math,lAbs) // prendre la plus grande valeur
   if (max < 8) {
-    return 0;
+    return 0; // ne bouge pas assez
   }
   const i = lAbs.indexOf(max);
-  if (l[i] >= 0) {
+  if (l[i] >= 0) { // si la valeur est positive
     return i + 1;
   } else {
     return i + 2;
@@ -43,6 +47,10 @@ const getStatus = () => {
 }
 
 const getPerms = () => {
+  if (typeof DeviceMotionEvent.requestPermission == "undefined") {
+    alert("Votre appareil ne possède pas d'accéléromètre, ou il n'est pas accessible.")
+    return null
+  }
   DeviceMotionEvent.requestPermission().then((response) => {
     if (response == "granted") {
       bouttonJoindre.style.display = "block"
@@ -75,6 +83,10 @@ const getPerms = () => {
           window.status = 0;
         }
       });
+    }
+    else {
+      bouttonPerms.style.display = "none"
+      alert("Nous n'avons pas réussi à accéder aux permissions de l'accéléromètre, veuillez rafraichir la page.")
     }
   });
 }
