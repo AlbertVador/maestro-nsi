@@ -82,6 +82,7 @@ bouttonRejouer.onclick = () => {
     bouttonRejouer.style.display = "none";
     conteneurGameOver.style.display = "none";
     conteneurChoixChanson.style.display = "block";
+    lineColour = "black"
     chansonFinit = false;
     arrowCount = 0;
     arrows.forEach(lane => lane.length = 0);
@@ -101,7 +102,7 @@ bouttonRejouer.onclick = () => {
 
 let arrierePlan;
 let lineColour = "black"
-const renderStatic = () => {
+const renderStatic = () => { // Afficher la ligne au millieu
     arrierePlan.render();
     ctx.lineWidth = 2;
     const firstLaneX = canvasWidth/2 - 2 * laneWidth;
@@ -178,7 +179,7 @@ const gameLoop = (currentTime) => {
         }
     }
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    renderStatic();
+    renderStatic(); // Changer la couleur de la ligne au millieu
     renderMusiciens(dt, audioContext.currentTime);
     renderArrows(dt);
     if (chansonFinit) {
@@ -200,7 +201,7 @@ const conteneurConnect = document.getElementById("conteneurConnect");
 bouttonCommencer.onclick = () => {
     conteneur.removeChild(document.getElementById("regles"));
     conteneur.removeChild(bouttonCommencer);
-    webSocket = new WebSocket(`wss://${window.location.hostname}:8008`);
+    webSocket = new WebSocket(`wss://${window.location.hostname}:8008`); // ouvrir le websocket, quand on l'ouvre on reçoit un code
     webSocket.onmessage = (reponse) => {
         codeConnect.innerHTML = reponse.data;
         webSocket.onmessage = (infoTelephone) => {
@@ -223,9 +224,9 @@ bouttonJouer.onclick = () => {
     conteneurConnect.style.display = "none";
     bouttonJouer.style.display = "none";
     conteneurChoixChanson.style.display = "block";
-    webSocket.onmessage = (message) => {
+    webSocket.onmessage = (message) => { // on définit quand on reçoit un message
         if (message.data != "rien") {
-            rateAction(message.data);
+            rateAction(message.data); // le message contient la direction
         }
     }
 }
@@ -253,6 +254,7 @@ const commenceJeu = async (fichierChanson) => {
     tempsFleches = json["fleches"];
     arrierePlan = new Sprite("imagesJeu/Stage.png", 0, 0, 64, 36, 0, 0, canvasWidth, canvasHeight);
     const infoInstruments = json["instruments"];
+    // Placements des joueurs :
     [
         ["trompette", [[275, 220], [200, 250], [125, 300], [660, 120, true], [770, 150, true], [880, 190, true]], [80, 160]],
         ["cor", [[640, 230], [725, 250], [810, 280]], [105, 160]],
