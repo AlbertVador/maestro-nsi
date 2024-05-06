@@ -14,7 +14,7 @@ NodeJS (seulement testé avec 20.11.1)
 `npm install body-parser`
 
 
-3. Lancer le projet :
+2. Lancer le projet :
    
 `maestro-nsi-main$ cd Server`
 
