@@ -15,8 +15,6 @@ NodeJS (seulement testé avec 20.11.1)
 
 
 2. Lancer le projet :
-   
-`maestro-nsi-main$ cd Server`
 
 `maestro-nsi-main/Server$ node index.js`
 
