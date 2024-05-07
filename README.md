@@ -22,7 +22,7 @@ NodeJS (seulement testé avec 20.11.1)
 
 http://localhost:3000
 
-Pour le téléphone, trouvez votre ip local (commande ipconfig sur command prompt) et allez sur http://**ip_local_ici**:3000
+Pour le téléphone, trouvez votre ip local (commande *ipconfig* sur command prompt) et allez sur http://**ip_local_ici**:3000
 
 
 ### Replit :
