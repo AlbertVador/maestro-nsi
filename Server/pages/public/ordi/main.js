@@ -211,7 +211,7 @@ bouttonCommencer.onclick = () => {
   conteneur.removeChild(bouttonCommencer);
 
   // Ouverture d'une connexion WebSocket avec le serveur
-  webSocket = new WebSocket(`wss://${window.location.hostname}:8008`);
+  webSocket = new WebSocket(`ws${wssOrNot}://${window.location.hostname}:8008`);
 
   // Que faire quand on reçoit le code du jeu
   webSocket.onmessage = (reponse) => {
