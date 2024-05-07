@@ -20,7 +20,7 @@ NodeJS (seulement testé avec 20.11.1)
 
 3. Ouvrir :
 
-localhost:3000
+http://localhost:3000
 
 
 ### Replit :
