@@ -18,6 +18,10 @@ NodeJS (seulement testé avec 20.11.1)
 
 `maestro-nsi-main/Server$ node indexLocal.js`
 
+3. Ouvrir :
+
+localhost:3000
+
 
 ### Replit :
 
