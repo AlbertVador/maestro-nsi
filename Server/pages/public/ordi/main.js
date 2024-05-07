@@ -30,18 +30,15 @@ const rateAction = (lane) => {
       console.log("Parfait!");
       performanceJoueur["parfait"]++;
       lineColour = "green"
-      renderStatic()
   }
   else if (difference <= 60) {
       console.log("Bien.")
       performanceJoueur["bien"]++;
       lineColour = "orange"
-      renderStatic()
   }
   else {
       console.log("Mauvais :(");
       lineColour = "red"
-      renderStatic()
   }
 }
 
