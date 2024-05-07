@@ -4,28 +4,9 @@
 
 ## Lancer le projet :
 
-### Localement :
-1. Requis :
-   
-NodeJS (seulement testé avec 20.11.1)
-
-`maestro-nsi-main$ cd Server`
-
-`maestro-nsi-main/Server$ npm install`
-
-
-2. Lancer le projet :
-
-`maestro-nsi-main/Server$ node index.js`
-
-3. Ouvrir :
-
-http://localhost:3000
-
-Pour le téléphone, trouvez votre ip local (commande *ipconfig* sur command prompt) et allez sur http://**ip_local_ici**:3000
-
-
 ### Replit :
+
+Lancez le Replit, ou faites un fork
 
 > https://replit.com/@AlbertVador/MaestroNSI
 
