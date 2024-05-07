@@ -252,6 +252,7 @@ bouttonJouer.onclick = () => {
 }
 
 let audioContext = new AudioContext();
+audioContext.suspend();
 let source;
 
 // Fonction pour jouer un fichier audio (asynchrone)
