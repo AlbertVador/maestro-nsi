@@ -1,3 +1,12 @@
+// Si on est en local, alors le WebSocket ne sera pas sécurisé (il y aura un s en moins)
+let wssOrNot;
+if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    wssOrNot = ''
+}
+else {
+    wssOrNot = 's'
+}
+
 const entree = document.getElementById("entree"); // endroit où on met le code
 // on enlève les trucs qui nous énervent
 entree.setAttribute('autocomplete', 'off')
@@ -9,7 +18,7 @@ const bouttonMain = document.getElementById("bouttonMain");
 const bouttonPerms = document.getElementById("bouttonPerms");
 const statusToLane = ["rien", 2, 1, 3, 0]; // transférer la direction en colonne
 bouttonJoindre.onclick = () => {
-    const webSocket = new WebSocket(`wss://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`); // on ouvre une connection webSocket en donnant le code
+    const webSocket = new WebSocket(`ws${wssOrNot}://${window.location.hostname}:8080?code=${document.getElementById("entree").value.toUpperCase()}`); // on ouvre une connection webSocket en donnant le code
     webSocket.onclose = () => { // si le code n'est pas bon
         entree.style.borderColor = "red";
     }
@@ -47,7 +56,7 @@ const getStatus = () => {
 }
 
 const getPerms = () => {
-  if (typeof DeviceMotionEvent.requestPermission == "undefined") {
+  if (typeof DeviceMotionEvent == "undefined" || typeof DeviceMotionEvent.requestPermission == "undefined") {
     alert("Votre appareil ne possède pas d'accéléromètre, ou il n'est pas accessible.")
     return null
   }
