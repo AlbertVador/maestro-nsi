@@ -42,7 +42,7 @@ input::placeholder {
     padding: 1rem;
 }
 
-#bouttonMain {
+#bouttonMain, #bouttonJoindre {
   display: none;
 }
 
