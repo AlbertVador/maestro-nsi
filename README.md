@@ -16,7 +16,7 @@ NodeJS (seulement testé avec 20.11.1)
 
 2. Lancer le projet :
 
-`maestro-nsi-main/Server$ node index.js`
+`maestro-nsi-main/Server$ node indexLocal.js`
 
 
 ### Replit :
