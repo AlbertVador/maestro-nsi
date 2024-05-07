@@ -56,14 +56,18 @@ const getStatus = () => {
 }
 
 const getPerms = () => {
+  // Si l'appareil n'a pas d'accelerometre
   if (typeof DeviceMotionEvent == "undefined" || typeof DeviceMotionEvent.requestPermission == "undefined") {
     alert("Votre appareil ne possède pas d'accéléromètre, ou il n'est pas accessible.")
     return null
   }
+  // On fait une demande pour obtenir les droits d'utiliser l'accelerometre
   DeviceMotionEvent.requestPermission().then((response) => {
     if (response == "granted") {
+      // Fait apparaite le boutton Jouer
       bouttonJoindre.style.display = "block"
       bouttonPerms.style.display = "none"
+      // Fonction pour envoyer la direction d'un mouvement
       window.addEventListener("devicemotion", (event) => {       
         accelX = event.acceleration.x; // Haut - bas
         accelZ = event.acceleration.z; // Droite - gauche
@@ -93,6 +97,8 @@ const getPerms = () => {
         }
       });
     }
+
+    // Si on n'a pas obtenu les droits
     else {
       bouttonPerms.style.display = "none"
       alert("Nous n'avons pas réussi à accéder aux permissions de l'accéléromètre, veuillez rafraichir la page.")
@@ -101,7 +107,7 @@ const getPerms = () => {
 }
 
 let main = "Droite"
-
+// Fonction pour changer la main
 const changerMain = () => {
   if (main == "Droite") {
     main = "Gauche"
